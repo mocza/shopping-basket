@@ -8,10 +8,12 @@ import java.math.BigDecimal;
 import java.util.function.Supplier;
 
 public class ProductFactory {
+  private static Offer breadOffer = new BuyTwoSoupsGetOneLoafOfBreadHalfPriceOffer();
+  private static Offer appleOffer = new CheaperApplesOffer(new BigDecimal("0.9"));
 
   public enum AvailableProducts {
-    APPLE(() -> new Apple(new BigDecimal("1.0")).withOffer((Offer)new CheaperApplesOffer(new BigDecimal("0.9")))),
-    BREAD(() -> new Bread(new BigDecimal("0.8")).withOffer((Offer)new BuyTwoSoupsGetOneLoafOfBreadHalfPriceOffer())),
+    APPLE(() -> new Apple(new BigDecimal("1.0")).withOffer(appleOffer)),
+    BREAD(() -> new Bread(new BigDecimal("0.8")).withOffer(breadOffer)),
     MILK(() -> new Milk(new BigDecimal("1.3"))),
     SOUP(() -> new Soup(new BigDecimal("0.65")));
 

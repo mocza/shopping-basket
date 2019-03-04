@@ -2,7 +2,6 @@ package com.mocza.ui;
 
 import com.mocza.basket.Basket;
 import com.mocza.offer.EffectiveOffer;
-import com.mocza.offer.Offer;
 import com.mocza.product.Product;
 import org.springframework.util.StringUtils;
 
@@ -11,6 +10,7 @@ import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
@@ -22,36 +22,42 @@ public class CmdLineOutputFormatter implements OutputFormatter {
   private static final String SUBTOTAL_ROW_FORMAT = "Subtotal: {0}{1}";
   private static final String TOTAL_ROW_FORMAT = "Total: {0}{1}";
   private static final String OFFER_ROW_FORMAT = "{0} {1}% off: -{2}";
+  private static final int PRICE_DIGITS = 2;
   private Basket basket;
 
   public CmdLineOutputFormatter(Basket basket) {
     this.basket = basket;
   }
 
+  @Override
   public String getSubtotal() {
     return MessageFormat.format(SUBTOTAL_ROW_FORMAT,
-            basket.getCurrency().getMajorCurrencySign(), String.valueOf(basket.calculateSubtotal()));
+            basket.getCurrency().getMajorCurrencySign(), String.valueOf(getFormattedPrice(basket.calculateSubtotal())));
   }
 
+  @Override
   public Collection<String> getOffers() {
     List<String> formattedOffers = getFormattedOffers(getOffersGroupedByProduct(getEffectiveOffers(basket.getProducts())));
     return formattedOffers.isEmpty() ? asList(NO_OFFERS_AVAILABLE) : formattedOffers;
   }
 
+  @Override
   public String getTotal() {
     return MessageFormat.format(TOTAL_ROW_FORMAT,
-            basket.getCurrency().getMajorCurrencySign(), String.valueOf(basket.calculateTotal()));
+            basket.getCurrency().getMajorCurrencySign(), String.valueOf(getFormattedPrice(basket.calculateTotal())));
+  }
+
+  @Override
+  public BigDecimal getFormattedPrice(BigDecimal price) {
+    return price.setScale(PRICE_DIGITS);
   }
 
   private Collection<EffectiveOffer> getEffectiveOffers(Collection<Product> products) {
-    return products.stream()
-        .filter(p -> p.getEffectiveOffer().isPresent())
-        .map(p -> p.getEffectiveOffer().get())
-        .collect(Collectors.toList());
+    return products.stream().map(Product::getEffectiveOffer).flatMap(Optional::stream).collect(Collectors.toList());
   }
 
-  private Map<Product, List<EffectiveOffer>> getOffersGroupedByProduct(Collection<EffectiveOffer> offers) {
-    return offers.stream().collect(groupingBy(o -> o.getProductOfferIsAppliesTo()));
+  private Map<Product, List<EffectiveOffer>> getOffersGroupedByProduct(Collection<EffectiveOffer> effectiveOffers) {
+    return effectiveOffers.stream().collect(groupingBy(o -> o.getOfferAppliesTo()));
   }
 
   private List<String> getFormattedOffers(Map<Product, List<EffectiveOffer>> offersByProduct) {

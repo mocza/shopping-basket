@@ -5,7 +5,7 @@ import com.mocza.product.Product;
 import java.math.BigDecimal;
 import java.util.Collection;
 
-public class NullOffer extends Offer {
+public class NullOffer extends Offer<Product> {
   public static final Offer NULL_OFFER = new NullOffer();
 
   public NullOffer() {

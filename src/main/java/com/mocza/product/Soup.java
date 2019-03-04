@@ -11,10 +11,6 @@ public class Soup extends Product {
     super(Unit.TIN, unitPrice, Currency.GBP);
   }
 
-  public Soup(Unit unit, BigDecimal unitPrice, Currency currency) {
-    super(unit, unitPrice, currency);
-  }
-
   @Override
   public String getProductNameSingular() {
     return "soup";

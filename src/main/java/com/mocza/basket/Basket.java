@@ -1,6 +1,5 @@
 package com.mocza.basket;
 
-import com.mocza.offer.Offer;
 import com.mocza.product.Product;
 
 import java.math.BigDecimal;
@@ -19,13 +18,14 @@ public class Basket {
   }
 
   public BigDecimal calculateSubtotal() {
-    BigDecimal subtotal = products.stream().map(p -> p.getUnitPrice()).reduce(BigDecimal.ZERO, BigDecimal::add).setScale(PRICE_DIGITS);
-    return subtotal;
+    return products.stream().map(p -> p.getUnitPrice()).reduce(BigDecimal.ZERO, BigDecimal::add);
   }
 
   public BigDecimal calculateTotal() {
     products.forEach(product -> product.calculateEffectiveOffer(products));
-    return products.stream().map(p -> p.getDiscountedPrice()).reduce(BigDecimal.ZERO, BigDecimal::add).setScale(PRICE_DIGITS);
+    return products.stream()
+            .map(product -> product.getDiscountedPrice())
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
   }
 
   private long getCurrencyCount(Collection<Product> products) {

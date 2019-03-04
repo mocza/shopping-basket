@@ -6,34 +6,32 @@ import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Objects;
 
-import static com.mocza.basket.Basket.PRICE_DIGITS;
-
 /**
- * An EffectiveOffer describes what an Offer applied to a Product means when calculating the total.
+ * EffectiveOffer describes the impact of an Offer that is applied to a concrete product.
  */
 public class EffectiveOffer {
-  private Product productOfferIsAppliesTo;
-  private Collection<Product> productOfferIsBasedOn;
+  private Product offerAppliesTo;
+  private Collection<Product> offerIsBasedOn;
   private BigDecimal discountRate;
   private BigDecimal savings;
 
-  public EffectiveOffer(Product productOfferAppliesTo, Collection<Product> productOfferIsBasedOn, BigDecimal discountRate, BigDecimal savings) {
-    this.productOfferIsBasedOn = productOfferIsBasedOn;
-    this.productOfferIsAppliesTo = productOfferAppliesTo;
+  public EffectiveOffer(Product offerAppliesTo, Collection<Product> offerIsBasedOn, BigDecimal discountRate, BigDecimal savings) {
+    this.offerIsBasedOn = offerIsBasedOn;
+    this.offerAppliesTo = offerAppliesTo;
     this.discountRate = discountRate;
     this.savings = savings;
   }
 
   public BigDecimal getDiscountedPrice() {
-    return productOfferIsAppliesTo.getUnitPrice().multiply(discountRate).setScale(PRICE_DIGITS);
+    return offerAppliesTo.getUnitPrice().multiply(discountRate);
   }
 
-  public Collection<Product> getProductOfferIsBasedOn() {
-    return productOfferIsBasedOn;
+  public Collection<Product> getOfferIsBasedOn() {
+    return offerIsBasedOn;
   }
 
-  public Product getProductOfferIsAppliesTo() {
-    return productOfferIsAppliesTo;
+  public Product getOfferAppliesTo() {
+    return offerAppliesTo;
   }
 
   public BigDecimal getDiscountRate() {
@@ -49,21 +47,21 @@ public class EffectiveOffer {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     EffectiveOffer that = (EffectiveOffer) o;
-    return Objects.equals(productOfferIsBasedOn, that.productOfferIsBasedOn) &&
-            Objects.equals(productOfferIsAppliesTo, that.productOfferIsAppliesTo) &&
+    return Objects.equals(offerIsBasedOn, that.offerIsBasedOn) &&
+            Objects.equals(offerAppliesTo, that.offerAppliesTo) &&
             Objects.equals(savings, that.savings);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(productOfferIsBasedOn, productOfferIsAppliesTo, savings);
+    return Objects.hash(offerIsBasedOn, offerAppliesTo, savings);
   }
 
   @Override
   public String toString() {
     return "com.mocza.offer.EffectiveOffer{" +
-            "productOfferIsBasedOn=" + productOfferIsBasedOn +
-            ", productOfferIsAppliesTo=" + productOfferIsAppliesTo +
+            "offerIsBasedOn=" + offerIsBasedOn +
+            ", offerAppliesTo=" + offerAppliesTo +
             ", savings=" + savings +
             '}';
   }

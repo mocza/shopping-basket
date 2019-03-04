@@ -15,9 +15,7 @@ public class CheaperApplesOffer extends Offer<Apple> {
   }
 
   @Override
-  protected boolean isEligible(Apple apple, Collection<Product> products) {
-    return !apple.getEffectiveOffer().isPresent();
-  }
+  protected boolean isEligible(Apple apple, Collection<Product> products) { return true; }
 
   @Override
   Collection<Product> getProductsOfferIsBasedOn(Apple apple, Collection<Product> products) { return asList(apple); }

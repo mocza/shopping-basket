@@ -7,8 +7,6 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
 
-import static com.mocza.basket.Basket.PRICE_DIGITS;
-
 public abstract class Offer<T extends Product> {
   protected BigDecimal discountRate;
 
@@ -22,7 +20,7 @@ public abstract class Offer<T extends Product> {
 
   public BigDecimal getDiscountedPrice(T product, Collection<Product> products) {
     if (isEligible(product, products))
-      return product.getUnitPrice().multiply(discountRate).setScale(PRICE_DIGITS);
+      return product.getUnitPrice().multiply(discountRate);
     else
       return product.getUnitPrice();
   }
@@ -36,7 +34,7 @@ public abstract class Offer<T extends Product> {
   }
 
   protected BigDecimal getSavings(T product, Collection<Product> products) {
-    return product.getUnitPrice().subtract(getDiscountedPrice(product, products)).setScale(PRICE_DIGITS);
+    return product.getUnitPrice().subtract(getDiscountedPrice(product, products));
   }
 
   @Override

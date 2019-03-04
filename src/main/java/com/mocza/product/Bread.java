@@ -12,10 +12,6 @@ public class Bread extends Product {
     super(Unit.LOAF, unitPrice, Currency.GBP);
   }
 
-  public Bread(Unit unit, BigDecimal unitPrice, Currency currency) {
-    super(unit, unitPrice, currency);
-  }
-
   @Override
   public String getProductNameSingular() {
     return "bread";

@@ -12,10 +12,6 @@ public class Milk extends Product {
     super(Unit.BOTTLE, unitPrice, Currency.GBP);
   }
 
-  public Milk(Unit unit, BigDecimal unitPrice, Currency currency) {
-    super(unit, unitPrice, currency);
-  }
-
   @Override
   public String getProductNameSingular() {
     return "milk";

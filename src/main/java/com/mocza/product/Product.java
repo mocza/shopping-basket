@@ -46,9 +46,7 @@ public abstract class Product {
     return effectiveOffer;
   }
 
-  public Optional<EffectiveOffer> getEffectiveOffer() {
-    return effectiveOffer;
-  }
+  public Optional<EffectiveOffer> getEffectiveOffer() { return effectiveOffer; }
 
   public Currency getCurrency() { return currency; }
 

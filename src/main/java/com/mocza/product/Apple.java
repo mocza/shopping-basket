@@ -11,10 +11,6 @@ public class Apple extends Product {
     super(Unit.BAG, unitPrice, Currency.GBP);
   }
 
-  public Apple(Unit unit, BigDecimal unitPrice, Currency currency) {
-    super(unit, unitPrice, currency);
-  }
-
   @Override
   public String getProductNameSingular() {
     return "apple";

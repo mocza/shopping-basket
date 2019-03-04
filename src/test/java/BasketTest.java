@@ -15,13 +15,13 @@ public class BasketTest extends AbstractTest {
   @Test
   public void calculateSubtotalOneItem() {
     basket = new Basket(asList(bread1));
-    assertEquals(new BigDecimal("0.80"), basket.calculateSubtotal());
+    assertEquals(new BigDecimal("0.8"), basket.calculateSubtotal());
   }
 
   @Test
   public void calculateSubtotalTwoItems() {
     basket = new Basket(asList(bread1, milk));
-    assertEquals(new BigDecimal("2.10"), basket.calculateSubtotal());
+    assertEquals(new BigDecimal("2.1"), basket.calculateSubtotal());
   }
 
   @Test
@@ -35,7 +35,7 @@ public class BasketTest extends AbstractTest {
   @Test
   public void calculateTotalNoOffer() {
     basket = new Basket(asList(bread1));
-    assertEquals(new BigDecimal("0.80"), basket.calculateTotal());
+    assertEquals(new BigDecimal("0.8"), basket.calculateTotal());
     assertEquals(asList(Optional.empty()),
             basket.getProducts().stream().map(p -> p.getEffectiveOffer()).collect(toList()));
   }
