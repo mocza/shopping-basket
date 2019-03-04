@@ -1,6 +1,5 @@
 package com.mocza.offer;
 
-import com.mocza.offer.Offer;
 import com.mocza.product.Apple;
 import com.mocza.product.Product;
 
@@ -16,15 +15,11 @@ public class CheaperApplesOffer extends Offer {
   }
 
   @Override
-  Collection<Product> getProductsOfferIsBasedOn(Product product, Collection collection) {
-    return asList(product);
-  }
-
-
-  @Override
-  protected boolean isEligible(Product product, Collection products) {
+  protected boolean isEligible(Product product, Collection<Product> products) {
     return Apple.class.isInstance(product);
   }
 
+  @Override
+  Collection<Product> getProductsOfferIsBasedOn(Product product, Collection<Product> products) { return asList(product); }
 
 }

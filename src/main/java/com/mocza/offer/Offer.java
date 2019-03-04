@@ -6,22 +6,17 @@ import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Function;
 
-public abstract class Offer<C1 extends Class, C2 extends Class> {
+public abstract class Offer {
   protected BigDecimal discountRate;
-  protected C1 offerBasedOnProduct;
-  protected C2 offerAppliesToProduct;
 
   public Offer(BigDecimal discountRate) {
     this.discountRate = discountRate;
   }
 
-  public <T extends Product> Function<T, BigDecimal> getDiscountFunction() {
-    return product -> discountRate.multiply(product.getUnitPrice()).setScale(2);
-  }
+  abstract Collection<Product> getProductsOfferIsBasedOn(Product product, Collection<Product> products);
 
-  protected abstract boolean isEligible(Product product, Collection<Product> products);
+  abstract boolean isEligible(Product product, Collection<Product> products);
 
   public BigDecimal getDiscountedPrice(Product product, Collection<Product> products) {
     if (isEligible(product, products))
@@ -32,18 +27,21 @@ public abstract class Offer<C1 extends Class, C2 extends Class> {
 
   public Optional<EffectiveOffer> getEffectiveOffer(Product product, Collection<Product> products){
     if (isEligible(product, products))
-      return Optional.of(new EffectiveOffer(getProductsOfferIsBasedOn(product, products), product, discountRate, product.getUnitPrice().subtract(getDiscountedPrice(product, products)).setScale(2)));
+      return Optional.of(new EffectiveOffer(product, getProductsOfferIsBasedOn(product, products),
+              discountRate, getSavings(product, products)));
     else
       return Optional.empty();
   }
 
-  abstract Collection<Product> getProductsOfferIsBasedOn(Product product, Collection<Product> products);
+  private BigDecimal getSavings(Product product, Collection<Product> products) {
+    return product.getUnitPrice().subtract(getDiscountedPrice(product, products)).setScale(2);
+  }
 
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
-    Offer<?, ?> offer = (Offer<?, ?>) o;
+    Offer offer = (Offer) o;
     return Objects.equals(discountRate, offer.discountRate);
   }
 

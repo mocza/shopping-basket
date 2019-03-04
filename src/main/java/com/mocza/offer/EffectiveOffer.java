@@ -6,21 +6,40 @@ import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Objects;
 
+/**
+ * An EffectiveOffer describes what an Offer applied to a Product means when calculating the total.
+ */
 public class EffectiveOffer {
-  private Collection<Product> productOfferIsBasedOn;
   private Product productOfferIsAppliesTo;
+  private Collection<Product> productOfferIsBasedOn;
   private BigDecimal discountRate;
   private BigDecimal savings;
 
-  public EffectiveOffer(Collection<Product> productOfferIsBasedOn, Product productOfferIsAppliesTo, BigDecimal discountRate, BigDecimal savings) {
+  public EffectiveOffer(Product productOfferAppliesTo, Collection<Product> productOfferIsBasedOn, BigDecimal discountRate, BigDecimal savings) {
     this.productOfferIsBasedOn = productOfferIsBasedOn;
-    this.productOfferIsAppliesTo = productOfferIsAppliesTo;
+    this.productOfferIsAppliesTo = productOfferAppliesTo;
     this.discountRate = discountRate;
     this.savings = savings;
   }
 
   public BigDecimal getDiscountedPrice() {
     return productOfferIsAppliesTo.getUnitPrice().multiply(discountRate).setScale(2);
+  }
+
+  public Collection<Product> getProductOfferIsBasedOn() {
+    return productOfferIsBasedOn;
+  }
+
+  public Product getProductOfferIsAppliesTo() {
+    return productOfferIsAppliesTo;
+  }
+
+  public BigDecimal getDiscountRate() {
+    return discountRate;
+  }
+
+  public BigDecimal getSavings() {
+    return savings;
   }
 
   @Override
