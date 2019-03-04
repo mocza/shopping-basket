@@ -1,6 +1,5 @@
 package com.mocza.basket;
 
-import com.mocza.offer.EffectiveOffer;
 import com.mocza.offer.Offer;
 import com.mocza.product.Product;
 
@@ -10,6 +9,7 @@ import java.util.Optional;
 
 public class Basket {
   private static final Currency DEFAULT_CURRENCY = Currency.GBP;
+  public static final int PRICE_DIGITS = 2;
   private Collection<Product> products;
 
   public Basket(Collection<Product> products) {
@@ -19,22 +19,17 @@ public class Basket {
   }
 
   public BigDecimal calculateSubtotal() {
-    BigDecimal subtotal = products.stream().map(p -> p.getUnitPrice()).reduce(BigDecimal.ZERO, BigDecimal::add).setScale(2);
+    BigDecimal subtotal = products.stream().map(p -> p.getUnitPrice()).reduce(BigDecimal.ZERO, BigDecimal::add).setScale(PRICE_DIGITS);
     return subtotal;
   }
 
-  public BigDecimal calculateTotal(Collection<Offer> offers) {
-    products.forEach(p -> p.setEffectiveOffer(getEffectiveOffer(p, offers)));
-    return products.stream().map(p -> p.getDiscountedPrice()).reduce(BigDecimal.ZERO, BigDecimal::add);
+  public BigDecimal calculateTotal() {
+    products.forEach(product -> product.calculateEffectiveOffer(products));
+    return products.stream().map(p -> p.getDiscountedPrice()).reduce(BigDecimal.ZERO, BigDecimal::add).setScale(PRICE_DIGITS);
   }
 
   private long getCurrencyCount(Collection<Product> products) {
     return products.stream().map(p -> p.getCurrency()).distinct().count();
-  }
-
-  private Optional<EffectiveOffer> getEffectiveOffer(Product product, Collection<Offer> offers) {
-    return offers.stream().map(offer -> offer.getEffectiveOffer(product, products))
-            .filter(optional -> optional.isPresent()).map(optional -> ((Optional<EffectiveOffer>)optional).get()).findFirst();
   }
 
   public Collection<Product> getProducts() {

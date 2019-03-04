@@ -1,26 +1,16 @@
 import com.mocza.basket.Basket;
 import com.mocza.offer.EffectiveOffer;
-import com.mocza.offer.Offer;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigDecimal;
-import java.util.Collection;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertEquals;
 
-public class BasketTest extends ShoppingTest {
-
+public class BasketTest extends AbstractTest {
   private Basket basket;
-  private Collection<Offer> offers;
-
-  @Before
-  public void setUp() {
-    offers = asList(cheaperApplesOffer, buyTwoSoupsGetOneLoafOfBreadHalfPriceOffer);
-  }
 
   @Test
   public void calculateSubtotalOneItem() {
@@ -37,7 +27,7 @@ public class BasketTest extends ShoppingTest {
   @Test
   public void calculateTotalOnOffer() {
     basket = new Basket(asList(apple1));
-    assertEquals(new BigDecimal("0.90"), basket.calculateTotal(offers));
+    assertEquals(new BigDecimal("0.90"), basket.calculateTotal());
     assertEquals(asList(Optional.of(new EffectiveOffer(apple1, asList(apple1), new BigDecimal("0.9"), new BigDecimal("0.10")))),
             basket.getProducts().stream().map(p -> p.getEffectiveOffer()).collect(toList()));
   }
@@ -45,7 +35,7 @@ public class BasketTest extends ShoppingTest {
   @Test
   public void calculateTotalNoOffer() {
     basket = new Basket(asList(bread1));
-    assertEquals(new BigDecimal("0.8"), basket.calculateTotal(offers));
+    assertEquals(new BigDecimal("0.80"), basket.calculateTotal());
     assertEquals(asList(Optional.empty()),
             basket.getProducts().stream().map(p -> p.getEffectiveOffer()).collect(toList()));
   }
@@ -53,7 +43,7 @@ public class BasketTest extends ShoppingTest {
   @Test
   public void calculateTotalTwoOnOfferSameProduct() {
     basket = new Basket(asList(apple1, apple2));
-    assertEquals(new BigDecimal("1.80"), basket.calculateTotal(offers));
+    assertEquals(new BigDecimal("1.80"), basket.calculateTotal());
     assertEquals(asList(
             Optional.of(new EffectiveOffer(apple1, asList(apple1), new BigDecimal("0.9"), new BigDecimal("0.10"))),
             Optional.of(new EffectiveOffer(apple2, asList(apple2), new BigDecimal("0.9"), new BigDecimal("0.10")))),
@@ -63,7 +53,7 @@ public class BasketTest extends ShoppingTest {
   @Test
   public void calculateTotalTwoOnOfferOneNotOnOffer() {
     basket = new Basket(asList(apple1, apple2, bread1));
-    assertEquals(new BigDecimal("2.60"), basket.calculateTotal(offers));
+    assertEquals(new BigDecimal("2.60"), basket.calculateTotal());
     assertEquals(asList(
             Optional.of(new EffectiveOffer(apple1, asList(apple1), new BigDecimal("0.9"), new BigDecimal("0.10"))),
             Optional.of(new EffectiveOffer(apple2, asList(apple2), new BigDecimal("0.9"), new BigDecimal("0.10"))),
@@ -71,11 +61,10 @@ public class BasketTest extends ShoppingTest {
             basket.getProducts().stream().map(p -> p.getEffectiveOffer()).collect(toList()));
   }
 
-
   @Test
   public void calculateTotal_oneBreadHalfPriceOffer() {
     basket = new Basket(asList(soup1, soup2, bread1));
-    assertEquals(new BigDecimal("1.70"), basket.calculateTotal(offers));
+    assertEquals(new BigDecimal("1.70"), basket.calculateTotal());
     assertEquals(asList(
             Optional.empty(),
             Optional.empty(),
@@ -86,7 +75,7 @@ public class BasketTest extends ShoppingTest {
   @Test
   public void calculateTotal_breadFullPriceWithOneSoup() {
     basket = new Basket(asList(soup1, bread1));
-    assertEquals(new BigDecimal("1.45"), basket.calculateTotal(offers));
+    assertEquals(new BigDecimal("1.45"), basket.calculateTotal());
     assertEquals(asList(
             Optional.empty(),
             Optional.empty()),
@@ -96,7 +85,7 @@ public class BasketTest extends ShoppingTest {
   @Test
   public void calculateTotal_twoBreadsHalfPriceWithFourSoupsOffer() {
     basket = new Basket(asList(soup1, soup2, soup3, soup4, bread1, bread2));
-    assertEquals(new BigDecimal("3.40"), basket.calculateTotal(offers));
+    assertEquals(new BigDecimal("3.40"), basket.calculateTotal());
     assertEquals(asList(
             Optional.empty(),
             Optional.empty(),

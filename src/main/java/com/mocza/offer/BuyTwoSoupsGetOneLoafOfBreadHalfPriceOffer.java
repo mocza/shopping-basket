@@ -10,21 +10,19 @@ import java.util.Objects;
 
 import static java.util.stream.Collectors.toList;
 
-public class BuyTwoSoupsGetOneLoafOfBreadHalfPriceOffer extends Offer {
+public class BuyTwoSoupsGetOneLoafOfBreadHalfPriceOffer extends Offer<Bread> {
 
   public BuyTwoSoupsGetOneLoafOfBreadHalfPriceOffer() {
     super(new BigDecimal("0.5"));
   }
 
   @Override
-  protected boolean isEligible(Product product, Collection<Product> products) {
-    return Bread.class.isInstance(product) && (products.stream()
-            .filter(p -> Soup.class.isInstance(p) && !getSoupsAlreadyUsedInAnOffer(products).contains(p))
-            .count() >= 2);
+  protected boolean isEligible(Bread product, Collection<Product> products) {
+    return products.stream().filter(p -> Soup.class.isInstance(p) && !getSoupsAlreadyUsedInAnOffer(products).contains(p)).count() >= 2;
   }
 
   @Override
-  Collection<Product> getProductsOfferIsBasedOn(Product product, Collection<Product> products) {
+  Collection<Product> getProductsOfferIsBasedOn(Bread product, Collection<Product> products) {
     return products.stream().filter(p -> Soup.class.isInstance(p) && !getSoupsAlreadyUsedInAnOffer(products).contains(p))
             .limit(2)
             .collect(toList());

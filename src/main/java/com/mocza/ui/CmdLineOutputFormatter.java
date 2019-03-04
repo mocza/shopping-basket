@@ -38,9 +38,9 @@ public class CmdLineOutputFormatter implements OutputFormatter {
     return formattedOffers.isEmpty() ? asList(NO_OFFERS_AVAILABLE) : formattedOffers;
   }
 
-  public String getTotal(Collection<Offer> offers) {
+  public String getTotal() {
     return MessageFormat.format(TOTAL_ROW_FORMAT,
-            basket.getCurrency().getMajorCurrencySign(), String.valueOf(basket.calculateTotal(offers)));
+            basket.getCurrency().getMajorCurrencySign(), String.valueOf(basket.calculateTotal()));
   }
 
   private Collection<EffectiveOffer> getEffectiveOffers(Collection<Product> products) {

@@ -8,18 +8,18 @@ import java.util.Collection;
 
 import static java.util.Arrays.asList;
 
-public class CheaperApplesOffer extends Offer {
+public class CheaperApplesOffer extends Offer<Apple> {
 
   public CheaperApplesOffer(BigDecimal discountRate) {
     super(discountRate);
   }
 
   @Override
-  protected boolean isEligible(Product product, Collection<Product> products) {
-    return Apple.class.isInstance(product);
+  protected boolean isEligible(Apple apple, Collection<Product> products) {
+    return !apple.getEffectiveOffer().isPresent();
   }
 
   @Override
-  Collection<Product> getProductsOfferIsBasedOn(Product product, Collection<Product> products) { return asList(product); }
+  Collection<Product> getProductsOfferIsBasedOn(Apple apple, Collection<Product> products) { return asList(apple); }
 
 }

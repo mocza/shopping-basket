@@ -6,6 +6,8 @@ import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Objects;
 
+import static com.mocza.basket.Basket.PRICE_DIGITS;
+
 /**
  * An EffectiveOffer describes what an Offer applied to a Product means when calculating the total.
  */
@@ -23,7 +25,7 @@ public class EffectiveOffer {
   }
 
   public BigDecimal getDiscountedPrice() {
-    return productOfferIsAppliesTo.getUnitPrice().multiply(discountRate).setScale(2);
+    return productOfferIsAppliesTo.getUnitPrice().multiply(discountRate).setScale(PRICE_DIGITS);
   }
 
   public Collection<Product> getProductOfferIsBasedOn() {

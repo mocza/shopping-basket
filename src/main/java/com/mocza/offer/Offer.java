@@ -7,34 +7,36 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
 
-public abstract class Offer {
+import static com.mocza.basket.Basket.PRICE_DIGITS;
+
+public abstract class Offer<T extends Product> {
   protected BigDecimal discountRate;
 
   public Offer(BigDecimal discountRate) {
     this.discountRate = discountRate;
   }
 
-  abstract Collection<Product> getProductsOfferIsBasedOn(Product product, Collection<Product> products);
+  abstract boolean isEligible(T product, Collection<Product> products);
 
-  abstract boolean isEligible(Product product, Collection<Product> products);
+  abstract Collection<Product> getProductsOfferIsBasedOn(T product, Collection<Product> products);
 
-  public BigDecimal getDiscountedPrice(Product product, Collection<Product> products) {
+  public BigDecimal getDiscountedPrice(T product, Collection<Product> products) {
     if (isEligible(product, products))
-      return product.getUnitPrice().multiply(discountRate).setScale(2);
+      return product.getUnitPrice().multiply(discountRate).setScale(PRICE_DIGITS);
     else
       return product.getUnitPrice();
   }
 
-  public Optional<EffectiveOffer> getEffectiveOffer(Product product, Collection<Product> products){
+  public Optional<EffectiveOffer> getEffectiveOffer(T product, Collection<Product> products) {
     if (isEligible(product, products))
       return Optional.of(new EffectiveOffer(product, getProductsOfferIsBasedOn(product, products),
-              discountRate, getSavings(product, products)));
+        discountRate, getSavings(product, products)));
     else
       return Optional.empty();
   }
 
-  private BigDecimal getSavings(Product product, Collection<Product> products) {
-    return product.getUnitPrice().subtract(getDiscountedPrice(product, products)).setScale(2);
+  protected BigDecimal getSavings(T product, Collection<Product> products) {
+    return product.getUnitPrice().subtract(getDiscountedPrice(product, products)).setScale(PRICE_DIGITS);
   }
 
   @Override
