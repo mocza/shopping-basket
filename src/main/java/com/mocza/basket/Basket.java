@@ -8,7 +8,6 @@ import java.util.Optional;
 
 public class Basket {
   private static final Currency DEFAULT_CURRENCY = Currency.GBP;
-  public static final int PRICE_DIGITS = 2;
   private Collection<Product> products;
 
   public Basket(Collection<Product> products) {
